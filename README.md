@@ -51,6 +51,14 @@ You can also retrieve a copy of the company struct values:
     set c [person.works_for p]
     company.name "Not so amazing Corp!"
 
+One can also use other structs as the base for this struct:
+
+    struct substructure : {superstruct otherstruct} {
+
+        name val
+        .. etc ..
+    }
+
 Neat eh?
 
 ## Encapsulation
