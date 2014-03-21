@@ -44,7 +44,7 @@ proc protected {name args body} {
 			variable _included
 			set caller_ns \[uplevel 1 namespace current\]
 
-			if {![info exists \$_included]} then {
+			if {![info exists \$_included] && "$owner_ns" != \[namespace current\]} then {
 				return -code error "`$name` illegally called from outside module"
 			}
 
