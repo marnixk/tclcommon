@@ -33,6 +33,23 @@ proc struct {name args} {
 }
 
 #
+#	Cast a reference to a new type
+#
+proc cast! {r_arr to_type} {
+	upvar 1 $r_arr arr
+	set arr(_type) $to_type
+}
+
+#
+#	Transform the array to be a new type and return the new array 
+#
+proc cast {arr_values to_type} {
+	array set arr $arr_values
+	set arr(_type) $to_type
+	return [array get arr]
+}
+
+#
 #	Creates 'type-checked' retrieval methods for all the elements inside this structure, 
 #	it automatically recurses when it encounters a complex element 
 #
@@ -141,6 +158,16 @@ proc struct-elements {typename} {
 	return [array names info]
 }
 
+proc struct-type {struct} { 
+	array set info $struct
+	return $info(_type)
+}
+
+
+proc is-struct {arr_info} {
+	return [expr [lsearch $arr_info "_type"] != -1]
+}
+
 #
 #	Determine the type of `typename`'s element `sub`
 #
@@ -192,7 +219,7 @@ proc default-value-of {typename sub} {
 #
 #	Create a new instance of struct of the type `type`
 #
-proc create {type} {
+proc create {type {initvalues {}}} {
 
 	if {[struct-exists $type] == 0} then {
 		error "no such type `$type`"
@@ -201,6 +228,7 @@ proc create {type} {
 	set elements [struct-elements $type]
 	
 	set var(_type) $type
+
 
 	foreach el_name $elements {
 		set el_type [type-of $type $el_name]
@@ -222,13 +250,18 @@ proc create {type} {
 			}
 
 			"array" {
-				array set var($el_name) $el_default
+				set var($el_name) $el_default
 			}
 
 			default {
 				set var($el_name) [create $el_type]
 			}
 		}
+	}
+
+	# initialize with these values
+	foreach {key val} $initvalues {
+		set var($key) [uplevel 1 subst $val]
 	}
 
 	return [array get var]
