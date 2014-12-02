@@ -9,7 +9,7 @@ proc struct {name args} {
 
 	# has a separator sign? Then interpret the next as a list of base elements, otherwise
 	# the separator is /actually/ the settings list
-	if {$separator == ":"} then {
+	if {$separator == ":" || $separator == "extends"} then {
 		lassign $tail base settings
 	} else {
 		set settings $separator
@@ -68,12 +68,12 @@ proc struct-create-methods-for {type base} {
 		#	content
 		#
 		uplevel #0 [subst {
-			proc $base.$el {r_struct {val _no_value_}} {
+			proc $base.$el {r_struct {val _no_value_} {forced "-check"}} {
 				# check to see if we're dealing with the correct struct type
 				upvar 1 \$r_struct struct
 				array set struct_arr \$struct
 
-				if {\$struct_arr(_type) != "$root_type"} then {
+				if {\$struct_arr(_type) != "$root_type" && \$forced != "-no-check"} then {
 					error "$base'$el: incorrect type `\$struct_arr(_type)` expected `$root_type`"
 				}
 
@@ -229,7 +229,6 @@ proc create {type {initvalues {}}} {
 	
 	set var(_type) $type
 
-
 	foreach el_name $elements {
 		set el_type [type-of $type $el_name]
 		set el_default [default-value-of $type $el_name]
@@ -261,7 +260,7 @@ proc create {type {initvalues {}}} {
 
 	# initialize with these values
 	foreach {key val} $initvalues {
-		set var($key) [uplevel 1 subst $val]
+		set var($key) [uplevel 1 subst "{$val}"]
 	}
 
 	return [array get var]
