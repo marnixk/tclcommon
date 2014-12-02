@@ -2,6 +2,14 @@
 
 This is a small library that has common TCL functionality currently mostly concerned with structuring and encapsulating information inside your programs.
 
+It contains:
+
+* Structs (to be deprecated)
+* Module encapsulation
+* Annotations
+* Dependency Injection
+
+
 ## Structs
 
 By default TCL is typeless, however, the world around us deals with structured data which is usually identified by types. To increase the interoperability of TCL with other languages and the modelling of knowledge domains, the C concept of `structs` are introduced.
