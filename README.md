@@ -87,8 +87,7 @@ It also introduces the concept of `modules` which closely resembles that found i
 
 As you can see, a module allows other modules to be included, procs to be either public or protected. If a proc is protected, it can only be called from inside the inclusion hierarchy.
 
-Annotations
-===============
+## Annotations
 
 Simple script that adds meaningful Java-style annotations to Tcl language
 
@@ -105,3 +104,27 @@ Simple script that adds meaningful Java-style annotations to Tcl language
                                                                                                                                                                                                                                               
 
        The list of options is passed into the callback proc
+
+## Dependency Injection
+
+Simple dependency injection mechanism for TclOO using the annotations mechanism
+described above. See examples below.
+
+	@Component( category "class-type" ) class create MyClass {
+		superclass MySuperClass
+	}
+
+	@Component class create MySecondClass {
+
+		@Inject( MyClass ) variable cl
+		@InjectCategory( class-type ) variable categoryList
+		@InjectList( MySuperClass ) variable list
+
+		method myMethod {} {
+			puts $cl
+			puts $list
+			puts $categoryList
+		}
+	}
+
+

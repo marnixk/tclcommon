@@ -1,5 +1,7 @@
+#
+#	Dependency Injection mechanism
+#
 namespace eval DI {
-
 
 	#
 	#	Add injectable to the `components` elements
