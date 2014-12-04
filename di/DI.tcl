@@ -25,3 +25,6 @@ Annotations::register Inject DI::wireSingleProcessor
 Annotations::register InjectCategory DI::wireAllProcessor
 Annotations::register InjectList DI::wireTypeProcessor
 
+#
+# You'll want to run DI::prepareInstances after your code has loaded
+#

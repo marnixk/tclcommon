@@ -19,9 +19,6 @@ namespace eval DI {
 		}
 	}
 
-
-
-
 	#
 	#	Instanciate the bindings for `instance` object
 	#
