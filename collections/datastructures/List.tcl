@@ -31,6 +31,9 @@ oo::class create Std::List {
 		}
 	}
 
+	#
+	#	Get element at `index` index
+	#
 	method get {index} {
 		return [lindex $items $index]
 	}
@@ -51,14 +54,8 @@ oo::class create Std::List {
 	#
 	#	What's the index of this item?
 	#	
-	method indexOf? {item {startAt 0}} {
-		for {set idx $startAt} {$idx < [my size]} {incr idx} {
-			set storedItem [my get $idx]
-			if {$storedItem == $item} {
-				return $idx
-			}
-		}
-		return -1
+	method indexOf {item {startAt 0}} {
+		return [lsearch -start $startAt $items $item]
 	}
 
 	#
@@ -72,7 +69,7 @@ oo::class create Std::List {
 	#	Empty?
 	#
 	method empty? {} {
-		return [expr [my size] == 0]
+		return [expr {[llength $items] == 0}]
 
 	}
 
@@ -82,6 +79,44 @@ oo::class create Std::List {
 	method iterator {} {
 		return [Std::ListIterator new [self]]
 	}
+
+	#
+	#	Get the first element
+	#
+	method first {} {
+		return [my get 0]
+	}
+
+	#
+	#	Get the last element
+	#
+	method last {} {
+		return [my get [my size]-1]
+	}
+
+	#
+	#	Everything except last
+	#
+	method initial {} {
+		set initialList [lrange $items 0 end-1]
+		return [Std::List new $initialList]
+	}
+
+	#
+	#	Everything except first
+	#
+	method rest {} {
+		set restList [lrange $items 1 end]
+		return [Std::List new $restList]
+	}
+
+	#
+	#	Return the native representation of the list
+	#
+	method toList {} {
+		return $items
+	}
+
 
 	#
 	#	f> symbolises 'function flow'. You pass it the list of context variables you want to be
