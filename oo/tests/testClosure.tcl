@@ -18,7 +18,14 @@ proc countWithClosureObject  {closureObj} {
 	puts "End"
 }
 
-countWithClosure { puts $counter }
-countWithClosureObject [-> {counter} {puts $counter}]
+set factor 2
 
-[-> {puts $it}] "marnix"
+# include "factor" from the environment
+[-> {factor} {counter} { puts [expr $factor * $counter] }] 10
+[-> {counter} { puts "This is passed into the closure: $counter" }] 10
+[-> { puts "The simplest form of a closure: $it" }] 10
+
+# countWithClosure  { puts "$counter" }
+# countWithClosureObject [-> {counter} {puts $counter}]
+
+# [-> {puts $it}] "marnix"

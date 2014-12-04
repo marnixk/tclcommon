@@ -83,8 +83,27 @@ oo::class create Std::List {
 		return [Std::ListIterator new [self]]
 	}
 
-	method f-> {} {
-		return [Std::Operations::Dispatch new [my iterator]]
+	#
+	#	f> symbolises 'function flow'. You pass it the list of context variables you want to be
+	#	available in the closures. 
+	#
+	method f> {context args} {
+
+		# move variables down here
+		foreach var $context {
+			upvar 1 $var $var
+			puts "$var == [set $var]"
+		}
+
+		set dispatcher [Std::Operations::Dispatch new [self]]
+
+		foreach {op closure} $args {
+			set closureObj [-> $context {it} $closure]
+			set newList [$dispatcher $op $closureObj]
+			set dispatcher [Std::Operations::Dispatch new $newList]
+		}
+
+		return $newList
 	}
 
 }

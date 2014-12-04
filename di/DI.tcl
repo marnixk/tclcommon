@@ -1,6 +1,6 @@
 package require md5 
 
-source "../annotations/annotate.tcl"
+set di_pkg_path [file dirname [info script]]
 
 #
 #	Define Dependency Injection variables
@@ -13,9 +13,9 @@ namespace eval DI {
 
 }
 
-source "Wiring.tcl"
-source "Query.tcl"
-source "Annotations.tcl"
+source "$di_pkg_path/Wiring.tcl"
+source "$di_pkg_path/Query.tcl"
+source "$di_pkg_path/Annotations.tcl"
 
 # 
 #	Register @Component, @Inject, @InjectList

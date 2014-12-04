@@ -25,17 +25,17 @@ oo::class create Std::Operations::Dispatch {
 		return {}
 	}
 
-
 	#
 	#	Dispatcher method
 	#
 	method unknown {operation closure} {
+	
 		set op [my findOperation $operation]
 		if {$op == {}} then {
 			error "No such operation found `$operation`"
 		}
 
-		${op}::do $iterator $closure
+		return [${op}::do $iterator $closure]
 	}
 
 }

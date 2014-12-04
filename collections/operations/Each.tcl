@@ -2,18 +2,18 @@
 lappend Std::Operations {each Std::Operations::Each}
 
 #
-#	Implementation
+#	Implementation of the each operator
 #
 namespace eval Std::Operations::Each {
 
-	proc do {iterator closure} {
-
-#		eval {subst {proc ::current_closure {it} { $closure }}}
+	proc do {listObj closureObj} {
+		set iterator [$listObj iterator]
 
 		while {[$iterator hasNext?]} {
-			current_closure [$iterator next] 
+			$closureObj [$iterator next] 
 		}
 
+		return $listObj
 	}
 
 }
