@@ -1,4 +1,4 @@
-namespace eval Encapsulation {
+namespace eval Std {
 	
 	#
 	#	Module definition
