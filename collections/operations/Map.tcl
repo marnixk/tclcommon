@@ -7,11 +7,11 @@ lappend Std::Operations {map Std::Operations::Map}
 namespace eval Std::Operations::Map {
 
 	proc do {listObj closureObj} {
-		set iterator [$listObj iterator]
+
 		set outputList [Std::List new]
 
-		while {[$iterator hasNext?]} {
-			set transformedItem [$closureObj [$iterator next]]
+		foreach item [$listObj toList] {
+			set transformedItem [$closureObj $item]
 			$outputList add $transformedItem
 		}
 

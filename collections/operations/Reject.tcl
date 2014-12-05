@@ -8,13 +8,9 @@ namespace eval Std::Operations::Reject {
 
 	proc do {listObj closureObj} {
 
-		# get the iterator
-		set iterator [$listObj iterator]
-
 		set outputList [Std::List new]
 
-		while {[$iterator hasNext?]} {
-			set item [$iterator next]
+		foreach item [$listObj toList] {
 			set result [$closureObj $item]
 
 			# false? rejected element.

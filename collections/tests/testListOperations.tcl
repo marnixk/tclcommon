@@ -2,7 +2,7 @@
 
 package require TclOO
 
-source "../All.tcl"
+source "../../load.tcl"
 
 set myList [Std::List new]
 

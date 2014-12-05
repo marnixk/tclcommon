@@ -7,10 +7,8 @@ lappend Std::Operations {every Std::Operations::Every}
 namespace eval Std::Operations::Every {
 
 	proc do {listObj closureObj} {
-		set iterator [$listObj iterator]
 
-		while {[$iterator hasNext?]} {
-			set item [$iterator next]
+		foreach item [$listObj toList] {
 			set result [$closureObj $item]
 			
 			if {!$result} {

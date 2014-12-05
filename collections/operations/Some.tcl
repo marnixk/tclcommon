@@ -7,10 +7,8 @@ lappend Std::Operations {some Std::Operations::Some}
 namespace eval Std::Operations::Some {
 
 	proc do {listObj closureObj} {
-		set iterator [$listObj iterator]
+		foreach item [$listObj toList] {
 
-		while {[$iterator hasNext?]} {
-			set item [$iterator next]
 			set result [$closureObj $item]
 			
 			if {$result} {

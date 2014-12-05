@@ -1,5 +1,8 @@
 package require TclOO
 
+#
+#	List implementation
+#
 oo::class create Std::List {
 
 	variable items
@@ -14,6 +17,14 @@ oo::class create Std::List {
 			lappend items $item
 		}
 	}
+
+
+#
+# .d8888b. .d8888b. .d8888b. .d8888b. .d8888b. .d8888b. 
+# 88'  `88 88'  `"" 88'  `"" 88ooood8 Y8ooooo. Y8ooooo. 
+# 88.  .88 88.  ... 88.  ... 88.  ...       88       88 
+# `88888P8 `88888P' `88888P' `88888P' `88888P' `88888P' 
+#                                                      
 
 	#
 	#	Add one item
@@ -38,47 +49,6 @@ oo::class create Std::List {
 		return [lindex $items $index]
 	}
 
-	#
-	#	Contains an item?
-	#
-	method contains? {item} {
-		foreach storedItem $items {
-			if {$storedItem == $item} {
-				return true
-			}
-		}
-
-		return false
-	}
-
-	#
-	#	What's the index of this item?
-	#	
-	method indexOf {item {startAt 0}} {
-		return [lsearch -start $startAt $items $item]
-	}
-
-	#
-	#	Size of list
-	#
-	method size {} {
-		return [llength $items]
-	}
-
-	#
-	#	Empty?
-	#
-	method empty? {} {
-		return [expr {[llength $items] == 0}]
-
-	}
-
-	#
-	#	Get an iterator
-	#
-	method iterator {} {
-		return [Std::ListIterator new [self]]
-	}
 
 	#
 	#	Get the first element
@@ -110,35 +80,55 @@ oo::class create Std::List {
 		return [Std::List new $restList]
 	}
 
+#                                                dP   oo                            
+#                                                88                                 
+# .d8888b. 88d888b. .d8888b. 88d888b. .d8888b. d8888P dP .d8888b. 88d888b. .d8888b. 
+# 88'  `88 88'  `88 88ooood8 88'  `88 88'  `88   88   88 88'  `88 88'  `88 Y8ooooo. 
+# 88.  .88 88.  .88 88.  ... 88       88.  .88   88   88 88.  .88 88    88       88 
+# `88888P' 88Y888P' `88888P' dP       `88888P8   dP   dP `88888P' dP    dP `88888P' 
+#          88                                                                       
+#          dP 
+
+
+	#
+	#	Contains an item?
+	#
+	method contains? {item} {
+		foreach storedItem $items {
+			if {$storedItem == $item} {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	#
+	#	What's the index of this item?
+	#	
+	method indexOf {item {startAt 0}} {
+		return [lsearch -start $startAt $items $item]
+	}
+
+	#
+	#	Size of list
+	#
+	method size {} {
+		return [llength $items]
+	}
+	#
+	#	Empty?
+	#
+	method empty? {} {
+		return [expr {[llength $items] == 0}]
+
+	}
+
 	#
 	#	Return the native representation of the list
 	#
 	method toList {} {
 		return $items
-	}
-
-
-	#
-	#	f> symbolises 'function flow'. You pass it the list of context variables you want to be
-	#	available in the closures. 
-	#
-	method f> {context args} {
-
-		# move variables down here
-		foreach var $context {
-			upvar 1 $var $var
-			puts "$var == [set $var]"
-		}
-
-		set dispatcher [Std::Operations::Dispatch new [self]]
-
-		foreach {op closure} $args {
-			set closureObj [-> $context {it} $closure]
-			set newList [$dispatcher $op $closureObj]
-			set dispatcher [Std::Operations::Dispatch new $newList]
-		}
-
-		return $newList
 	}
 
 }

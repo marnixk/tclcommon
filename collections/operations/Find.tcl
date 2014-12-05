@@ -7,10 +7,8 @@ lappend Std::Operations {find Std::Operations::Find}
 namespace eval Std::Operations::Find {
 
 	proc do {listObj closureObj} {
-		set iterator [$listObj iterator]
 
-		while {[$iterator hasNext?]} {
-			set item [$iterator next]
+		foreach item [$listObj toList] {
 			set result [$closureObj $item]
 
 			if {$result} {

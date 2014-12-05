@@ -2,12 +2,10 @@ set collPackagePath [file dirname [info script]]
 
 # datastructures
 source "$collPackagePath/datastructures/List.tcl"
-
-# iterators
-source "$collPackagePath/iterators/Iterator.tcl"
-source "$collPackagePath/iterators/ListIterator.tcl"
+source "$collPackagePath/datastructures/Map.tcl"
 
 # operators
+source "$collPackagePath/operations/FunctionFlow.tcl"
 source "$collPackagePath/operations/Dispatch.tcl"
 source "$collPackagePath/operations/Each.tcl"
 source "$collPackagePath/operations/Map.tcl"
