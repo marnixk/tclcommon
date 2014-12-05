@@ -1,10 +1,9 @@
 #!/usr/bin/tclsh
 package require TclOO
 
-namespace import oo::*
-source "DI.tcl"
+source "../../load.tcl"
 
-class create Endpoint {
+oo::class create Endpoint {
 
 	method run {} {
 		puts "Running an endpoint"
@@ -13,7 +12,7 @@ class create Endpoint {
 }
 
 # Endpoint
-@Component( category "endpoint" ) class create EndpointA {
+@Component( category "endpoint" ) oo::class create EndpointA {
 	superclass Endpoint
 
 	method run {} {
@@ -23,15 +22,15 @@ class create Endpoint {
 }
 
 
-@Component( category "endpoint" ) class create EndpointB {
+@Component( category "endpoint" ) oo::class create EndpointB {
 	superclass Endpoint
 }
 
-@Component class create EndpointC {
+@Component oo::class create EndpointC {
 	superclass Endpoint
 }
 
-@Component class create Dispatcher {
+@Component oo::class create Dispatcher {
 
 	@Inject( EndpointA ) variable endpointA
 	@InjectCategory( endpoint ) variable endpointList

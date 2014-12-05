@@ -12,3 +12,6 @@ source "$pkg_path/collections/All.tcl"
 # oo functions
 source "$pkg_path/oo/Closure.tcl"
 source "$pkg_path/oo/OOHelpers.tcl"
+
+# configuration
+source "$pkg_path/configuration/Configuration.tcl"
