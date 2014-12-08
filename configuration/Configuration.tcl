@@ -7,11 +7,27 @@ package require TclOO
 #
 oo::class create Std::Configuration {
 
+	variable lookups
 	variable settings
 
+	#
+	#	Initialize data-members
+	#
 	constructor {{listOfPairs {}}} {
+		lappend lookups ""
 		set settings [Std::Map new]
 		my addAll $listOfPairs
+	}
+
+	#
+	#	Add a lookup
+	#
+	method addLookup {short} {
+		if {[string range $short end end] != "."} then {
+			append short .
+		}
+		lappend lookups $short
+		puts "Now has lookup for: $lookups"
 	}
 
 	#
@@ -29,19 +45,29 @@ oo::class create Std::Configuration {
 	#
 	#	Add a number of settings
 	#
-	method addAll {listOfPairs} {
+	method addAll {input} {
+
+		if {[oo::instanceof? $input Std::Configuration]} then {
+			set listOfPairs [$input toList]
+		} else {
+			set listOfPairs $input
+		}
 		$settings putAll $listOfPairs
 	}
 
-
+	#
+	#	Get TCL representation of this list
+	#
 	method toList {} {
 		return [$settings toList]
 	}
 
+	#
+	#	Does this config contain the absolute key $key?
+	#
 	method contains? {key} {
 		return [$settings containsKey? $key]
 	}
-
 
 	#
 	#	Get the setting from the map
@@ -55,8 +81,15 @@ oo::class create Std::Configuration {
 
 		# get the setting names that adhere to the searchpattern
 		set listOfKeys [
-				Std::f> [$settings keys] {searchPattern} filter { 
-					return [expr {[string first $searchPattern $it] == 0}]
+				Std::f> [$settings keys] {lookups searchPattern} filter { 
+
+					# iterate over all lookups
+					foreach lookup $lookups {
+						if {[string first "$lookup$searchPattern" $it] == 0} then {
+							return true
+						}
+					}
+					return false
 				}
 			]
 
@@ -71,7 +104,12 @@ oo::class create Std::Configuration {
 				lappend subset $key [$settings get $key]
 			}
 
-			return [Std::Configuration new $subset]
+			# create a new configuration and add the current
+			# search pattern as a lookup path and return the
+			# new instance.
+			set subConfig [Std::Configuration new $subset]
+			$subConfig addLookup $searchPattern
+			return $subConfig
 		}
 
 		return {}
