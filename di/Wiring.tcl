@@ -1,11 +1,21 @@
 namespace eval DI {
 
 	#
+	#	Add a handler that is to be executed after everything
+	#	has been wired properly.
+	#
+	proc registerPostHandler {procName} {
+		variable postWireConfiguration
+		lappend postWireConfiguration $procName
+	}
+
+	#
 	#	Iterate over all the components and instanciate them and hook them up properly
 	#
 	proc prepareInstances {} {
 		variable components
 		variable instances
+		variable postWireConfiguration
 
 		# instanciate all components
 		foreach component $components {
@@ -17,6 +27,11 @@ namespace eval DI {
 		foreach instance $instances {
 			wireInstance $instance
 		}
+
+		foreach procName $postWireConfiguration {
+			$procName
+		}
+
 	}
 
 	#

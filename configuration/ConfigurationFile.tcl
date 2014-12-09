@@ -7,24 +7,21 @@ oo::class create Std::ConfigurationFile {
 	
 	superclass Std::Configuration
 
-	variable filename
-
 	#
 	#	Initialize data-members
 	#
-	constructor {aFilename} {
+	constructor {filenames} {
 		next {}
-		set filename $aFilename
 
-		my loadFromFile
+		foreach filename $filenames {
+			my _loadFromFile $filename
+		}
 	}
 
 	#
 	#	Load from file
 	#
-	method loadFromFile {} {
-		puts "Starting to load from file"
-
+	method _loadFromFile {filename} {
 		set fp [open $filename r]
 		while {![eof $fp]} {
 			set line [gets $fp]

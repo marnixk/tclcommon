@@ -27,7 +27,6 @@ oo::class create Std::Configuration {
 			append short .
 		}
 		lappend lookups $short
-		puts "Now has lookup for: $lookups"
 	}
 
 	#

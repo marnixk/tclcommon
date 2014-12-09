@@ -10,6 +10,18 @@ namespace eval DI {
 	variable components
 	variable instances
 	variable requires
+	variable postWireConfiguration
+
+	#
+	#	Initialize the variables
+	#
+	proc initializeVariables {} {
+		variable requires
+		variable postWireConfiguration
+
+		lappend requires
+		lappend postWireConfiguration
+	}
 
 }
 
@@ -28,3 +40,5 @@ Annotations::register InjectList DI::wireTypeProcessor
 #
 # You'll want to run DI::prepareInstances after your code has loaded
 #
+
+DI::initializeVariables

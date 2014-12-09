@@ -38,7 +38,7 @@ namespace eval DI {
 			
 		# extract useful information from current context
 		set classCode [info level -3]
-		set className [lindex $classCode 3]
+		set className [lindex $classCode end-1]
 		set varName [lindex $args 1]
 		set wireClassName [lindex $options 0]
 		set classIdentifier [md5::md5 -hex $classCode]
@@ -60,7 +60,7 @@ namespace eval DI {
 			
 		set classCode [info level -3]
 		set varName [lindex $args 1]
-		set className [lindex $classCode 3]
+		set className [lindex $classCode end-1]
 		set classIdentifier [md5::md5 -hex $classCode]
 		
 		# append "requirement" for this category to be wired

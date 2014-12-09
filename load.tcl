@@ -16,3 +16,4 @@ source "$pkg_path/oo/OOHelpers.tcl"
 # configuration
 source "$pkg_path/configuration/Configuration.tcl"
 source "$pkg_path/configuration/ConfigurationFile.tcl"
+source "$pkg_path/configuration/ConfigurationService.tcl"
