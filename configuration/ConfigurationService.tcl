@@ -3,7 +3,8 @@ namespace eval ConfigurationService {
 	variable recipes
 	variable config
 
-	set config {}
+	set config [Std::Configuration new]
+	set recipes {}
 
 	#
 	#	Set the configuration base for this service.
