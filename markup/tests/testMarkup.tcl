@@ -15,7 +15,8 @@ html::render output {
 		
 		' "Lone text"
 
-		<p> ' "So happy to see you"; 
+		<p> ' "So happy to see you could all make it today."
+
 		<br/>
 
 		<ul> {

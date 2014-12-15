@@ -25,3 +25,4 @@ source "$pkg_path/logging/FileLoggerOutput.tcl"
 
 # html rendering
 source "$pkg_path/markup/markup.tcl"
+source "$pkg_path/markup/shortcuts.tcl"

@@ -51,8 +51,11 @@ namespace eval html {
 		variable outputBuffer
 		set outputBuffer $varName
 		uplevel 1 [subst { $contents }]
+		upvar 1 $outputBuffer output
 		unset outputBuffer 
+		return $output
 	}
+
 
 	proc simpleTag {tag args} {
 		variable outputBuffer
@@ -62,41 +65,9 @@ namespace eval html {
 			error "Make sure you only render inside a `renderHtml <varName> { ... }` block"
 		}
 
-		upvar 1 output $outputBuffer
-		append output "[string repeat \t $tagLevel]<$tag />\n"
-	}
-
-	#
-	#	Return a string with the attributes in `options` they are shaped
-	#	as follows:
-	#
-	#		{ key= value key2= value }
-	#
-	proc getAttributes {options} {
-		
-		set attrOutput {}
-		set nAttributes [expr {[llength $options] / 2}]
-		set idx 0
-
-		foreach {name value} $options {
-
-			if {[string index $name end] != "="} then {
-				error "Expected an option, found `$name`"
-			}
-
-			# sane name is name without the equals sign
-			set saneName [string range $name 0 end-1]
-
-			# add to output
-			append attrOutput "$saneName=\"[escapeHtml $value]\""
-
-			# only add a space if there are more attributes to render
-			incr idx
-			if {$idx != $nAttributes} then {
-				append attrOutput " "
-			}
-		}
-		return $attrOutput
+		upvar 1 $outputBuffer output
+		set attributes [getAttributes $args]
+		append output "[string repeat \t $tagLevel]<$tag $attributes />\n"
 	}
 
 	#
@@ -110,7 +81,7 @@ namespace eval html {
 			error "Make sure you only render inside a `renderInto <varName> { ... }` block"
 		}
 
-		upvar 1 output $outputBuffer
+		upvar 1 $outputBuffer output
 
 		# default settings, expecting body
 		set rendersText no
@@ -152,6 +123,41 @@ namespace eval html {
 		return $output
 	}
 
+
+	#
+	#	Return a string with the attributes in `options` they are shaped
+	#	as follows:
+	#
+	#		{ key= value key2= value }
+	#
+	proc getAttributes {options} {
+		
+		set attrOutput {}
+		set nAttributes [expr {[llength $options] / 2}]
+		set idx 0
+
+		foreach {name value} $options {
+
+			if {[string index $name end] != "="} then {
+				error "Expected an option, found `$name`"
+			}
+
+			# sane name is name without the equals sign
+			set saneName [string range $name 0 end-1]
+
+			# add to output
+			append attrOutput "$saneName=\"[escapeHtml $value]\""
+
+			# only add a space if there are more attributes to render
+			incr idx
+			if {$idx != $nAttributes} then {
+				append attrOutput " "
+			}
+		}
+		return $attrOutput
+	}
+
+
 	#
 	#	Escapes most important HTML chars
 	#
@@ -165,7 +171,7 @@ namespace eval html {
 	proc ' {contents} {
 		variable tagLevel
 		variable outputBuffer
-		upvar 1 output $outputBuffer
+		upvar 1 $outputBuffer output
 		append output "[string repeat \t $tagLevel][escapeHtml $contents]\n"
 	}
 }
