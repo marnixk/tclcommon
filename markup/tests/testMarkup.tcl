@@ -4,12 +4,11 @@ source "../../load.tcl"
 
 namespace import html::*
 
-set output {}
 set param "This is my link"
 set myclass "blue-h1"
 set mylist [list alice bob ewan]
 
-html::render output {
+set myOutput [html::render {
 	<div> class= "mycomponent" {
 		<h1> class= $myclass ' "List of siblings"
 		
@@ -29,6 +28,10 @@ html::render output {
 			}
 		}
 
+		html::insert [html::render {
+					<p> ' "My inbetween rendering"
+				}]
+
 		<form> action= "/myformendpoint" method= "POST" {
 			<fieldset> {
 				<label> ' "First set of controls"
@@ -42,6 +45,6 @@ html::render output {
 		}
 
 	}
-}
+}]
 
-puts "HTML output:\n$output"
+puts "HTML output:\n$myOutput"

@@ -2,6 +2,9 @@ namespace eval html {
 
 	namespace export '
 
+	set bufferNumber 0
+	set outputStack {}
+
 	set tagLevel 0
 
 	# list of all html tags
@@ -31,7 +34,7 @@ namespace eval html {
 	#	Add aliases for all the normal tag names
 	#
 	foreach tagname $alltags {
-		interp alias {} <$tagname> {} html::fullTag $tagname		
+		interp alias {} <$tagname> {} html::fullTag $tagname
 	}
 	
 	#
@@ -47,16 +50,46 @@ namespace eval html {
 	#	Setup the outputbuffer variable name and start rendering content
 	#	in the scope above ours.
 	#
-	proc render {varName contents} {
+	proc render {contents} {
+		variable outputStack
 		variable outputBuffer
+		variable bufferNumber
+
+		# new buffer name
+		incr bufferNumber
+		set varName "buffer$bufferNumber"
+
+		uplevel 1 [subst {set $varName {}}]
+
+		# add to stack
+		lappend outputStack $varName
+
+		# Change current buffer name
 		set outputBuffer $varName
+
+		# Execute render instructions
 		uplevel 1 [subst { $contents }]
-		upvar 1 $outputBuffer output
-		unset outputBuffer 
-		return $output
+
+		# Level up
+		set outputStack [lrange $outputStack 0 end-1]
+		set outputBuffer [lindex $outputStack end]
+
+		# get result
+		set result [uplevel 1 [list set $varName]]
+
+		uplevel 1 [list unset $varName]
+		return $result
 	}
 
+	proc insert {html} {
+		variable outputBuffer
+		upvar 1 $outputBuffer output
+		append output $html
+	}
 
+	#
+	#	Simple tag has no content
+	#
 	proc simpleTag {tag args} {
 		variable outputBuffer
 		variable tagLevel

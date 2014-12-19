@@ -31,6 +31,13 @@ oo::class create Person {
 
 }
 
+html::defineComponent AgeDisplayComponent {
+	-context {age}
+	-html {
+		<p> class= "age" ' "this person is $age years old!"
+	}
+}
+
 #
 #	Person component definition
 #
@@ -44,12 +51,11 @@ html::defineComponent PersonComponent {
 	}
 
 	-html {
-		<div> class= "person" {
-			<p> ' "Repeating this $nTimes!"
-			<span> ' "$someCustomStuff"
-			<a> href= "/person/id/$personId" ' "[$person fullName]"
-			<span> class= "age" ' [$person age]
-		}
+		<p> ' "Repeating this $nTimes!"
+		<span> ' "$someCustomStuff"
+		<a> href= "/person/id/$personId" ' "[$person fullName]"
+
+		html::insert [html::renderComponent AgeDisplayComponent { age "[$person age]" }]
 	}
 
 }

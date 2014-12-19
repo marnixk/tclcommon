@@ -29,6 +29,7 @@ namespace eval html {
 		return $ComponentList($name)
 	}
 
+
 	#
 	#	Render the component with `componentName` using the values
 	#	in the `context` dictionary list. It will 
@@ -39,6 +40,7 @@ namespace eval html {
 		set _controller [dict get $_component -controller]
 		set _contextVariables [dict get $_component -context] 
 
+		# make all context variables local
 		foreach contextVar $_contextVariables {
 			if {![dict exists $context $contextVar]} then {
 				error "Missing context variable names `$contextVar` expected for $componentName"
@@ -51,8 +53,12 @@ namespace eval html {
 
 		if 1 $_controller
 
-		set _htmlOutput {}
-		return [html::render _htmlOutput $_htmlMarkup]
+		set _htmlMarkup [subst {
+			<div> class= "[dict get $_component -wrapper]" {
+				$_htmlMarkup
+			}
+		}]
+		return [html::render $_htmlMarkup]
 
 	}
  
