@@ -52,4 +52,8 @@ namespace eval form {
 		uplevel 1 $html
 	}
 
+	proc table {headers content} {
+		
+	}
+
 }
