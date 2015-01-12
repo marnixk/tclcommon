@@ -88,13 +88,31 @@ package require TclOO
 	}
 
 	#
+	#	Find the nearest source we'd be interested in
+	#
+	method _nearestNonLoggerSource {} {
+		set level 2
+		while {true} {
+			set source [uplevel $level { info level [info level]}]
+			lassign $source object method
+			
+			if {$object != [self] && [string first "::oo::Obj" $object] == 0} then {
+				return $source
+			}
+
+			incr level
+		}
+	}
+
+	#
 	#	Log the message if active log level
 	#
 	method _message {type msg} {
 		if {[my _isActiveLevel $type]} {
 			set timestamp [clock format [clock seconds] -format "%D %T"]
-			set source [uplevel 2 { info script }]
-			set saneSource [string range [file rootname $source] [string length [file dirname $source]]+1 end]
+			lassign [my _nearestNonLoggerSource] object method
+
+			set saneSource "[string range [info object class $object] 2 end].$method"
 			$output out "$timestamp *$type* - $saneSource - $msg"
 		}
 	}
