@@ -20,7 +20,14 @@ namespace eval DI {
 			}
 		}
 
-		error "No component with the name $reqName found"
+		return -code error "No component with the name $reqName found"
+	}
+
+	#
+	#	Is this an abstract component?
+	#
+	proc isAbstractComponent {component} {
+		return [lindex $component end]
 	}
 
 	proc getOfType {which} {
@@ -29,15 +36,19 @@ namespace eval DI {
 		lappend instances
 		foreach component $components {
 			
+			if {[isAbstractComponent $component]} then {
+				continue
+			}
+
 			# class name
 			set obj [lindex $component 1]
 
 			# get component
 			set objInst [get $obj]
-			
+
 			# is component of type `which`
-			if {[info object isa typeof $objInst $which]} then {
-				lappend instances [get [lindex $component 1]]
+			if {[oo::instanceof? $objInst $which]} then {
+				lappend instances $objInst
 			}
 		}
 

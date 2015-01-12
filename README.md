@@ -11,12 +11,15 @@ It contains:
 * Collections
 ** Datastructures
 ** Operations
+* OO helper functions
+* Configuration settings
+* Logging facilities
+* Typed exchange format
 
 * Structs (to be deprecated)
 
 Will contain in the future:
 
-* Properties and configuration settings
 * Internationalization  
 
 ## Closures

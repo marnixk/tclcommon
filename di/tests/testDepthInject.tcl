@@ -12,10 +12,11 @@ source "../../load.tcl"
 	}
 }
 
+
 #
 #	Base component
 #
-@Component( abstract yes ) oo::class create BaseComponent {
+@AbstractComponent oo::class create BaseComponent {
 
 	@Inject( Injectable ) variable injectable
 
@@ -43,4 +44,3 @@ DI::prepareInstances
 set abstr [DI::get BaseComponent]
 set impl [DI::get ImplComponent]
 $impl func
-

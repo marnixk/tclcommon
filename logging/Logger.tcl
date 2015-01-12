@@ -1,5 +1,6 @@
 package require TclOO
 
+
 #
 #	The logger class is to be inserted
 #
@@ -99,3 +100,8 @@ package require TclOO
 	}
 
 }
+
+#
+#	Shortcut for writing @Inject( Std::Logger ) all the time.
+#
+interp alias {} @Logger {} @Inject( Std::Logger )

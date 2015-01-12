@@ -15,6 +15,7 @@ namespace eval DI {
 	proc prepareInstances {} {
 		variable components
 		variable instances
+		variable requires
 		variable postWireConfiguration
 
 		# instanciate all components
@@ -45,46 +46,69 @@ namespace eval DI {
 	#	Instanciate the bindings for `instance` object
 	#
 	proc wireInstance {instance} {
-		set signature [getSignatureFor $instance]
-		set requiredForInstance [getRequiredForInstance $signature] 
-		
-	 	set cInstance [lindex $instance 1]
+		set signatures [getSignaturesFor $instance]
 
-		foreach requirement $requiredForInstance {
-			lassign $requirement sig type which as
+		foreach signature $signatures {
+			set requiredForInstance [getRequiredForInstance $signature] 
 			
-			if {$type == "single"} then {
-				set ${cInstance}::$as [get $which]
-			}
+		 	set cInstance [lindex $instance 1]
 
-			if {$type == "category"} then {
-				set ${cInstance}::$as [getInCategory $which]
-			}
+			foreach requirement $requiredForInstance {
+				lassign $requirement sig type which as
+				
+				if {$type == "single"} then {
+					set ${cInstance}::$as [get $which]
+				}
 
-			if {$type == "oftype"} then {
-				set ${cInstance}::$as [getOfType $which]
+				if {$type == "category"} then {
+					set ${cInstance}::$as [getInCategory $which]
+				}
+
+				if {$type == "oftype"} then {
+					set ${cInstance}::$as [getOfType $which]
+				}
 			}
 		}
+	}
 
+	#
+	#	Get a list of valid classes for this instance
+	#
+	proc getObjectHierarchy {instance} {
+		set instanceClass [info object class $instance]
+		lappend validClasses $instanceClass
+		foreach superClass [info class superclasses $instanceClass] {
+			lappend validClasses $superClass
+		}
+
+		return $validClasses
 	}
 
 	#
 	#  Find the signature for `instance`
 	#
-	proc getSignatureFor {instance} {
+	proc getSignaturesFor {instance} {
 		variable components
-	
+
+		lappend signatures
+
 		lassign $instance i_name i_instance
-		
+
+		# discover class and superclasses for this instance
+		set validClasses [getObjectHierarchy $i_instance]
+	
 		foreach component $components { 
 			lassign $component category className signature
-			if {$i_name == $className} then {
-				return $signature
+			if {[lsearch $validClasses $className] != -1} then {
+				lappend signatures $signature
 			}
 		}
 
-		return -code error "No signature found for $i_name"
+		if {[llength $signatures] == 0} then {
+			return -code error "No signature found for $i_name"
+		}
 
+		return $signatures
 	}
 
 	#
