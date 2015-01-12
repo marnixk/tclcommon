@@ -27,3 +27,9 @@ source "$pkg_path/logging/FileLoggerOutput.tcl"
 source "$pkg_path/markup/markup.tcl"
 source "$pkg_path/markup/shortcuts.tcl"
 source "$pkg_path/markup/components.tcl"
+
+# exchange models
+source "$pkg_path/exchange/model.tcl"
+source "$pkg_path/exchange/decode.tcl"
+source "$pkg_path/exchange/encode.tcl"
+source "$pkg_path/exchange/transmit.tcl"

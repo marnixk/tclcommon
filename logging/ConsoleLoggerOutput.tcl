@@ -5,6 +5,7 @@ oo::class create Std::ConsoleLoggerOutput {
 	#
 	method out {message} {
 		puts "$message"
+		flush stdout
 	}
 
 }

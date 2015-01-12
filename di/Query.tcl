@@ -14,6 +14,7 @@ namespace eval DI {
 		# iterate over all instances
 		foreach inst $instances {
 			set name [lindex $inst 0]
+
 			if {$name == $reqName} then {
 				return [lindex $inst 1]
 			}

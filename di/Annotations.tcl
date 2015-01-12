@@ -3,8 +3,14 @@
 #
 namespace eval DI {
 
+	set structComponent {category class classid abstract}
+	set structRequires {classId type wireName varName}
+
+	interp alias {} component@ {} lsearch $structComponent
+	interp alias {} requires@ {} lsearch $structRequires
+
 	#
-	#	Add injectable to the `components` elements
+	#	Add injectable to the `components` list. 
 	#
 	proc injectableProcessor {options args} {
 		variable components
@@ -16,6 +22,11 @@ namespace eval DI {
 			set category $Options(category)
 		}
 
+		set abstract no
+		if {[info exists Options(abstract)]} then {
+			set abstract $Options(abstract)
+		}
+
 		set classCode [info level -1]
 		set classIdentifier [md5::md5 -hex $classCode]
 		
@@ -24,7 +35,7 @@ namespace eval DI {
 			set className "::$className"
 		}
 
-		lappend components [list $category $className $classIdentifier]
+		lappend components [list $category $className $classIdentifier $abstract]
 	}
 	
 	#
@@ -35,7 +46,11 @@ namespace eval DI {
 		if {[lindex $args 0] != "variable"} then {
 			error "Expect to only wire to variables"
 		}
-			
+		
+		if {[info level] < 3} then {
+			return -code error "Is this class injectable?"
+		}
+
 		# extract useful information from current context
 		set classCode [info level -3]
 		set className [lindex $classCode end-1]

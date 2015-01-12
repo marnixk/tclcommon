@@ -20,6 +20,13 @@ namespace eval DI {
 		# instanciate all components
 		foreach component $components {
 			set className [lindex $component 1]
+
+			# make sure to not instanciate abstract instances
+			set abstract [lindex $component end]
+			if {$abstract} {
+				continue
+			}
+
 			lappend instances [list $className [$className new]]
 		}
 
@@ -76,7 +83,7 @@ namespace eval DI {
 			}
 		}
 
-		error "No signature found for $i_name"
+		return -code error "No signature found for $i_name"
 
 	}
 
